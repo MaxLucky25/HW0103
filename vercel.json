@@ -1,21 +1,16 @@
 {
   "version": 2,
-  "name": "HM0103",
-  "builds": [
-    {
-      "src": "src/index.ts",
-      "use": "@vercel/node"
+  "name": "HW0103",
+  "functions": {
+    "src/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 30
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
       "dest": "src/index.ts"
     }
-  ],
-  "functions": {
-    "src/**/*.ts": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }
