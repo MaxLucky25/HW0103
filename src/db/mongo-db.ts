@@ -10,8 +10,8 @@ const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
 const dbName = 'Cluster0103';
 const client = new MongoClient(mongoURI, {
     serverSelectionTimeoutMS: 10000,
-    tls: true, // Используем TLS вместо устаревшего SSL
-    tlsAllowInvalidCertificates: true, // Разрешить самоподписанные сертификаты
+    tls: true,
+    tlsAllowInvalidCertificates: true,
 });
 
 export let db: Db;
