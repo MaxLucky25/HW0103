@@ -1,0 +1,38 @@
+import dotenv from "dotenv";
+import {Collection, Db, MongoClient } from "mongodb";
+import {BlogDBType} from "../blogs/models";
+import {PostDBType} from "../posts/models";
+
+
+dotenv.config()
+
+const mongoURI = process.env.MONGO_URL || "mongodb://0.0.0.0:27017";
+const dbName = 'Cluster0103';
+const client = new MongoClient(mongoURI, {
+    serverSelectionTimeoutMS: 10000,
+    tls: true, // Используем TLS вместо устаревшего SSL
+    tlsAllowInvalidCertificates: true, // Разрешить самоподписанные сертификаты
+});
+
+export let db: Db;
+export let blogCollection: Collection<BlogDBType>;
+export let postCollection: Collection<PostDBType>;
+
+export const connectToDB = async () => {
+    try{
+        await client.connect();
+        db = client.db(dbName);
+
+        blogCollection= db.collection<BlogDBType>("blogs");
+        await blogCollection.createIndex({id:1}, {unique:true});
+        postCollection= db.collection<PostDBType>("posts");
+        await postCollection.createIndex({id:1}, {unique:true});
+
+        console.log("Successfully connected to MongoDB");
+        return true;
+    }catch(e){
+        console.error('Connection to MongoDb failed', e);
+        await client.close();
+        return false;
+    }
+};
