@@ -5,8 +5,8 @@ import {postCollection} from "../db/mongo-db";
 export const postRepository = {
 
     async getAll(): Promise<PostViewModel[]> {
-        const posts = await postCollection.find({},{projection: {_id: 0} }).toArray();
-        return posts as PostViewModel[];
+        const posts = await postCollection.find().toArray();
+        return posts.map(this.mapToOutput);
     },
 
     async create(input: PostInputModel): Promise<PostViewModel | null> {
@@ -23,8 +23,9 @@ export const postRepository = {
             createdAt: new Date()
         };
 
-       await postCollection.insertOne(newPost);
-       return newPost;
+        const result = await postCollection.insertOne(newPost);
+        const created = await postCollection.findOne({ _id: result.insertedId });
+        return this.mapToOutput(created!);
     },
 
     async getById(id: string): Promise<PostViewModel | null> {
@@ -58,6 +59,9 @@ export const postRepository = {
         const result = await postCollection.deleteOne({ id: id });
         return result.deletedCount === 1;
     },
-
+    mapToOutput(post: PostDBType): PostViewModel {
+        const { _id, ...rest } = post;
+        return rest;
+    }
 
 };

@@ -4,8 +4,8 @@ import {blogCollection} from "../db/mongo-db";
 
 export const blogRepository = {
     async getAll(): Promise<BlogViewModel[]> {
-        const blogs = await blogCollection.find({},{projection:{_id:0} }).toArray();
-        return blogs as BlogViewModel[];
+        const blogs = await blogCollection.find().toArray();
+        return blogs.map(this.mapToOutput);
     },
 
     async create(input: BlogInputModel): Promise<BlogViewModel> {
@@ -15,8 +15,9 @@ export const blogRepository = {
             createdAt: new Date(),
             isMembership: false,
         };
-        await blogCollection.insertOne(newBlog);
-        return newBlog;
+        const result = await blogCollection.insertOne(newBlog);
+        const created = await blogCollection.findOne({ _id: result.insertedId });
+        return this.mapToOutput(created!);
     },
 
     async getById(id: string): Promise<BlogViewModel | null> {
@@ -43,5 +44,8 @@ export const blogRepository = {
         const result = await blogCollection.deleteOne({id:id});
         return result.deletedCount === 1;
     },
-
+    mapToOutput(blog: BlogDBType): BlogViewModel {
+        const { _id, ...rest } = blog;
+        return rest;
+    }
 };
