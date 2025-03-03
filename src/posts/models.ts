@@ -11,6 +11,6 @@ export type PostDBType = {
     createdAt: Date;
 };
 
-export type PostViewModel =PostDBType;
+export type PostViewModel =Omit<PostDBType, '_id'>;
 
 export type PostInputModel = Pick<PostDBType, 'title' | 'shortDescription' | 'content' | 'blogId'>;

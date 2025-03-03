@@ -10,6 +10,6 @@ export type BlogDBType = {
     isMembership: boolean;
 };
 
-export type BlogViewModel = BlogDBType;
+export type BlogViewModel = Omit<BlogDBType, '_id'>;
 
 export type BlogInputModel = Pick<BlogDBType, 'name' | 'description' | 'websiteUrl'>;
