@@ -1,5 +1,7 @@
+import {ObjectId} from "mongodb";
 
 export type PostDBType = {
+    _id?: ObjectId;
     id: string;
     title: string;
     shortDescription: string;
