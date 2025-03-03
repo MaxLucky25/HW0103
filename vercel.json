@@ -8,7 +8,7 @@
     { "src": "/(.*)", "dest": "/src/app.ts" }
   ],
   "functions": {
-    "api/**/*.js": {
+    "src/**/*.ts": {
       "maxDuration": 30
     }
   }
